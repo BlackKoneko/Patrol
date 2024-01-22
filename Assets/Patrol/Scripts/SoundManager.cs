@@ -19,13 +19,11 @@ public class SoundManager : SingleTon<SoundManager>
 
     public void BgmSoundVolume(float val)
     {
-        Debug.Log("BGMº¼·ý" + val);
         mixer.SetFloat("BgmSound", Mathf.Log10(val) * 20);
     }
 
     public void EffectSoundVolume(float val)
     {
-        Debug.Log("EFFFº¼·ý" + val);
         mixer.SetFloat("EffectSound", Mathf.Log10(val) * 20);
     }
 

@@ -9,15 +9,16 @@ public class AimCamera : MonoBehaviour
     public int PriorityBoostAmount = 20;
     Cinemachine.CinemachineVirtualCameraBase vcam;
 
-    // Start is called before the first frame update
     void Start()
     {
         player = GetComponentInParent<Player>();
         vcam = GetComponent<Cinemachine.CinemachineVirtualCameraBase>();
     }
-
-    // Update is called once per frame
     void Update()
+    {
+        AimCam();
+    }
+    public void AimCam()
     {
         if (vcam != null)
         {
@@ -26,7 +27,7 @@ public class AimCamera : MonoBehaviour
                 vcam.Priority += PriorityBoostAmount;
                 boost = false;
             }
-            else if(!player.aiming && !boost)
+            else if (!player.aiming && !boost)
             {
                 vcam.Priority -= PriorityBoostAmount;
                 boost = true;
