@@ -10,8 +10,6 @@ public class VerticalSlot
     public Slot[] slots = new Slot[3]; 
 }
 
-
-
 public class InventoryUI : MonoBehaviour
 {
     public Player player;
@@ -41,6 +39,4 @@ public class InventoryUI : MonoBehaviour
             }
         }
     }
-
-
 }

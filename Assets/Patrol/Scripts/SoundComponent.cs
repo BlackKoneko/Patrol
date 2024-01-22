@@ -8,7 +8,6 @@ public class SoundComponent : MonoBehaviour
 {
     public AudioSource audioSource;
 
-
     public void Play(AudioClip clip)
     {
         audioSource.clip = clip;
@@ -18,7 +17,7 @@ public class SoundComponent : MonoBehaviour
     {
         if (audioSource.isPlaying == false)
         {
-            SoundManager.instance.ReturnPool(gameObject);
+            SoundManager.instance.objectPool.ReturnPool(gameObject);
         }
     }
 }

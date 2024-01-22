@@ -16,7 +16,5 @@ public class SingleTon<T> : MonoBehaviour where T : SingleTon<T>
         {
             Destroy(gameObject);
         }
-        Debug.Log(name);
     }
-
 }
