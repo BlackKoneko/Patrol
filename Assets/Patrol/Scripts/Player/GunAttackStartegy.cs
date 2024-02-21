@@ -4,18 +4,11 @@ using UnityEngine;
 
 public abstract class GunAttackStartegy
 {
-    public Player player;
-    public Weapon Hit
-    {
-        get
-        {
-            return player.weapon;
-        }
-    }
-    public GunAttackStartegy(Player player) 
+    public Weapon weapon;
+    public GunAttackStartegy(Weapon weapon) 
     {
 
-        this.player = player;
+        this.weapon = weapon;
     }
 
     public abstract void ShootGun();
@@ -23,38 +16,21 @@ public abstract class GunAttackStartegy
 
 public class PistolAttackStartegy : GunAttackStartegy
 {
-    public PistolAttackStartegy(Player player) : base(player)
-    {
-
-    }
-
-    public void Shoot()
-    {
-        Debug.Log("Pistol Shot");
-        Hit.hitPoint.Hit( Hit.damage, Hit.maxLength);
-        Hit.BulletCount--;
-    }
-
+    public PistolAttackStartegy(Weapon weapon) : base(weapon){}
     public override void ShootGun()
     {
-        Shoot();
+        weapon.hitPoint.Hit(weapon.damage, weapon.maxLength);
+        weapon.BulletCount--;
     }
 }
 public class ShotgunAttackStartegy : GunAttackStartegy
 {
-    public ShotgunAttackStartegy(Player player) : base(player)
-    {
+    public ShotgunAttackStartegy(Weapon weapon) : base(weapon){}
 
-    }
-    public void Shoot()
-    {
-        Debug.Log("Shotgun Shot");
-        Hit.hitPoint.Hit(Hit.damage, Hit.maxLength);
-        Hit.BulletCount--;
-    }
     public override void ShootGun()
     {
-        Shoot();
+        weapon.hitPoint.Hit(weapon.damage, weapon.maxLength);
+        weapon.BulletCount--;
     }
 }
 

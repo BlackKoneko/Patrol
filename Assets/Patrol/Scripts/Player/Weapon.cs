@@ -4,15 +4,14 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum Weapon_Type
-{
-    PISTOL,
-    SHOTGUN,
-    ROKET
-}
 
 public class Weapon : MonoBehaviour
 { 
+    public enum Weapon_Type
+    {
+        PISTOL,
+        SHOTGUN
+    }
     public int damage;
     public int bulletCount;
     public int bulletCountMax;
@@ -20,11 +19,33 @@ public class Weapon : MonoBehaviour
     public HitPoint hitPoint;
     public bool fire = true;
     public Weapon_Type weapon_Type;
-    
+    GunAttackStartegy gunAttackStartegy;
+    public AudioClip shootAudio;
+
     private void Start()
     {
+        gunAttackStartegy = new PistolAttackStartegy(this);
         hitPoint = GetComponentInChildren<HitPoint>();
         BulletCount = bulletCountMax;
+    }
+
+    private void Update()
+    {
+        switch(weapon_Type)
+        {
+            case Weapon_Type.PISTOL:
+                gunAttackStartegy = new PistolAttackStartegy(this);
+                break;
+
+            case Weapon_Type.SHOTGUN:
+                gunAttackStartegy = new ShotgunAttackStartegy(this);
+                break;
+        }
+    }
+    public void Shoot()
+    {
+        gunAttackStartegy.ShootGun();
+        SoundManager.instance.Play(shootAudio, transform, false);
     }
     public int BulletCount
     {

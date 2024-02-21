@@ -28,7 +28,6 @@ public class HitPoint : MonoBehaviour, IAttackable
         RaycastHit hit;
         if(Physics.Raycast(transform.position, transform.forward, out hit, maxLength,layerMask) ) 
         {
-            Debug.Log(hit.transform.gameObject + "¸Â¾Ò´Ù.");
             if (hit.transform.TryGetComponent<IHitable>(out IHitable target))
             {
                 Atk = Damage;

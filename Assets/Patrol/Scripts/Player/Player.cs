@@ -32,7 +32,6 @@ public class Player : Character
     private Vector3 move;
     public bool stop = false;
     public bool aiming = false;
-    public bool setWeaponBool = false;
     private Animator animator;
 
     public Transform weaponSlot; 
@@ -40,8 +39,6 @@ public class Player : Character
     public GameObject weaponObj; 
     public Weapon weapon;
 
-    List<GunAttackStartegy> gunAttackList = new List<GunAttackStartegy>();
-    public  Weapon_Type weaponType;
 
     public float Speed
     {
@@ -56,14 +53,12 @@ public class Player : Character
         Hp = maxHp;
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        gunAttackList.Add(new PistolAttackStartegy(this));
         invenWindowObj.SetActive(false);
+        SetWeapon();
     }
 
     private void Update()
     {
-        if(!setWeaponBool)
-            SetWeapon();
         if (!stop)
         {
             Move();
@@ -71,16 +66,11 @@ public class Player : Character
         }
         if(Input.GetKeyDown(KeyCode.Alpha1))            //무기를 교체하는 부분
         {
-            Debug.Log("1번 통과");
             ChangeWeapon(weapons[0]);
-
         }
         if(Input.GetKeyDown(KeyCode.Alpha2)) 
         {
-            if (weapons[1] == null)
-                Debug.Log("샷건이 없습니다");
-
-            else
+            if (weapons[1] != null)
                 ChangeWeapon(weapons[1]);
         }
         InvenWindow();        
@@ -95,24 +85,22 @@ public class Player : Character
     }
     public void ChangeImageWeapon(GameObject weaponObj) //
     {
-        weaponType = weaponObj.GetComponent<Weapon>().weapon_Type;
-        Debug.Log((int)weaponType);
-        if(weaponType == Weapon_Type.PISTOL)
+        switch(weaponObj.GetComponent<Weapon>().weapon_Type)
         {
-            pistolImage.gameObject.SetActive(true);
-            shotgunImage.gameObject.SetActive(false);
-        }
-        else if(weaponType == Weapon_Type.SHOTGUN)
-        {
-            pistolImage.gameObject.SetActive(false);
-            shotgunImage.gameObject.SetActive(true);
+            case Weapon.Weapon_Type.PISTOL:
+                pistolImage.gameObject.SetActive(true);
+                shotgunImage.gameObject.SetActive(false);
+                break;
+            case Weapon.Weapon_Type.SHOTGUN:
+                pistolImage.gameObject.SetActive(false);
+                shotgunImage.gameObject.SetActive(true);
+                break;
         }
     }
     public void ChangeWeapon(GameObject weaponObj)
     {
         for(int i = 0; i < weapons.Length; i++) 
         {
-            Debug.Log(i);
             if (weapons[i] == weaponObj)
             {
                 weaponObj.SetActive(true);
@@ -121,9 +109,7 @@ public class Player : Character
             }
             else
             {
-                if (weapons[i] == null)
-                    Debug.Log("무기가 없습니다");
-                else
+                if (weapons[i] != null)
                     weapons[i].SetActive(false);
             }
         }
@@ -142,8 +128,6 @@ public class Player : Character
                 break;
             }
         }
-        gunAttackList.Add(new ShotgunAttackStartegy(this));
-        weaponType = Weapon_Type.SHOTGUN;
         return addWeapon;
     }
     
@@ -226,55 +210,25 @@ public class Player : Character
     {
         if (Input.GetKey(KeyCode.Mouse1))
         {
-            if (this.weaponType == Weapon_Type.PISTOL)
-                GunFireStart(this.weaponType, "PistolAiming", "PistolShoot");
-            else if (this.weaponType == Weapon_Type.SHOTGUN)
-                GunFireStart(this.weaponType, "PistolAiming", "PistolShoot");
+             GunFireStart("PistolAiming", "PistolShoot");
         }
         else
-            GunFireEnd(this.weaponType, "PistolAiming");
+            GunFireEnd("PistolAiming");
     }
-    public void GunFireStart(Weapon_Type weaponType, string aimStartAniName, string shootAniName)
+    public void GunFireStart(string aimStartAniName, string shootAniName)
     {
-        if (this.weaponType == weaponType)
-        {
-            animator.SetBool(aimStartAniName, true);
-            aiming = true;
-            if (Input.GetKeyDown(KeyCode.Mouse0) && weapon.BulletCount >0)
-            {
-                if (this.weaponType == Weapon_Type.PISTOL)
-                    SoundManager.instance.Play(pistolAudio, transform, false);
-                else if (this.weaponType == Weapon_Type.SHOTGUN)
-                    SoundManager.instance.Play(shotgunAudio, transform, false);
-                animator.SetTrigger(shootAniName);
-            }
-        }
+         animator.SetBool(aimStartAniName, true);
+         aiming = true;
+         if (Input.GetKeyDown(KeyCode.Mouse0) && weapon.BulletCount >0)
+         {
+            weapon.Shoot();
+            animator.SetTrigger(shootAniName);
+         }
     }
-    public void GunFireEnd(Weapon_Type weaponType, string aimEndAniName)
+    public void GunFireEnd(string aimEndAniName)
     {
-        if(this.weaponType == weaponType)
-        {
-            aiming = false;
-            animator.SetBool(aimEndAniName, false);
-        }
-    }
-   
-    public void GunShoot()
-    {
-        Shoot(true, weaponType);
-    }
-    public void ShotgunShoot()
-    {
-        Shoot(true, weaponType);
-    }
-    public void Shoot(bool oneShoot, Weapon_Type weapon_Type)
-    {
-        weapon.fire = oneShoot;
-        if (weapon.fire)
-        {
-            gunAttackList[(int)weapon_Type].ShootGun();
-            weapon.fire = !oneShoot;
-        }
+         aiming = false;
+         animator.SetBool(aimEndAniName, false);
     }
 
     public void SetWeapon()
@@ -284,24 +238,8 @@ public class Player : Character
         weapons[0] = setWeapon;
         inventoryUI.AddItem(setWeapon.GetComponent<Item>());
         weapon = weapons[0].GetComponent<Weapon>();
-        setWeaponBool = true;
         pistolImage.enabled = true;
-        weapons[0].GetComponent<Weapon>().weapon_Type = Weapon_Type.PISTOL;
     }
-    
-    public void StairsMove()
-    {
-        //float maxDistance = 100;
-        //RaycastHit hitY;
-        //RaycastHit hitZ;
-        //Debug.DrawLine(transform.position, transform.forward * maxDistance, Color.red);
-        //Debug.DrawLine(transform.position, new Vector3(0, 1, 1) * maxDistance, Color.blue);
-        //if (Physics.Raycast(transform.position, transform.forward,out hitY, maxDistance))
-        //{
-        //    Debug.Log("쏜다!");
-
-        //}
-    } //아직 미구현
     public override void Die()
     {
         CursorSwitch(false);

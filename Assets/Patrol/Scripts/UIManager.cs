@@ -41,15 +41,15 @@ public class UIManager : MonoBehaviour
             hpImage.color = Color.red;
         }
     }
-    public void BulletStatus()
+    public void BulletStatus()// 플레이어 . 웨폰. 타입
     {
-        switch (player.weaponType)
+        switch (player.weapon.weapon_Type)
         {
-            case Weapon_Type.PISTOL:
+            case Weapon.Weapon_Type.PISTOL:
                 pistolWeapon = player.weapons[0].GetComponent<Weapon>();
                 pistolBulletText.text = pistolWeapon.BulletCount + "/" + pistolWeapon.bulletCountMax;
                 break;
-            case Weapon_Type.SHOTGUN:
+            case Weapon.Weapon_Type.SHOTGUN:
                 shotgunWeapon = player.weapons[1].GetComponent<Weapon>();
                 shotgunBulletText.text = shotgunWeapon.BulletCount + "/" + shotgunWeapon.bulletCountMax;
                 break;

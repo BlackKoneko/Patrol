@@ -960,6 +960,7 @@ MonoBehaviour:
   hitPoint: {fileID: 0}
   fire: 1
   weapon_Type: 0
+  shootAudio: {fileID: 8300000, guid: 4ef847b9581f57a43a2ed14ab7e6d52e, type: 3}
 --- !u!114 &6933201634518082330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -973,7 +974,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   name: Pistol
-  number: 0
+  value: 0
   sprite: {fileID: 21300014, guid: 6674e8c43c63e4f4184cbd009379498d, type: 3}
 --- !u!1 &2438443972982655998
 GameObject:
